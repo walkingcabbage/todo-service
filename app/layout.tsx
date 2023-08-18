@@ -1,8 +1,11 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import TopBar from "./(components)/TopBar";
-import SideBar from "./(components)/SideBar";
+import SideBar from "../components/SideBar";
+import { getServerSession } from "next-auth";
+import AuthSession from "./AuthSession";
+import { useSession } from "next-auth/react";
+import AppLayout from "./AppLayout";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -11,7 +14,7 @@ export const metadata: Metadata = {
   description: "manage your thing to do",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -19,13 +22,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="flex flex-col h-full">
-          <TopBar />
-          <div className="relative flex h-full flex-1">
-            <SideBar />
-            {children}
-          </div>
-        </div>
+        <AuthSession>
+          <AppLayout>{children}</AppLayout>
+        </AuthSession>
       </body>
     </html>
   );
